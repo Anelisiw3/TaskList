@@ -32,4 +32,8 @@ public class TaskService {
         task.setCompleted(true);
         return taskRepository.save(task);
     }
-}
+
+public Task getTaskById(Long id) {
+    return taskRepository.findById(id).orElse(null);
+}}
+

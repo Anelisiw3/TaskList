@@ -3,6 +3,7 @@ package com.tasklist.tasklist.controller;
 import com.tasklist.tasklist.model.Task;
 import com.tasklist.tasklist.service.TaskService;
 
+import org.springframework.http.ResponseEntity; // ✅ Add this
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,5 +33,14 @@ public class TaskController {
     @PutMapping("/{id}/complete")
     public Task completeTask(@PathVariable Long id) {
         return taskService.markCompleted(id);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        Task task = taskService.getTaskById(id);
+        if (task == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(task);
     }
 }
