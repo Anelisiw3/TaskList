@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByCompleted(boolean completed);
-     List<Task> findByCompletedFalse();   // fetch only incomplete tasks
+     List<Task> findByCompletedFalse();   // fetch only incomplete tasks 
 }

@@ -4,13 +4,18 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "task")  // explicitly map to the "task" table
 public class Task {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
+
+    @Column(name = "due_date") // map snake_case column → camelCase field
     private LocalDate dueDate;
+
     private boolean completed = false;
 
     // Getters & Setters
@@ -26,4 +31,3 @@ public class Task {
     public boolean isCompleted() { return completed; }
     public void setCompleted(boolean completed) { this.completed = completed; }
 }
-

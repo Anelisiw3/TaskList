@@ -3,7 +3,7 @@ package com.tasklist.tasklist.controller;
 import com.tasklist.tasklist.model.Task;
 import com.tasklist.tasklist.service.TaskService;
 
-import org.springframework.http.ResponseEntity; //  Add this
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,16 +17,13 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    // CREATE
     @PostMapping
     public Task createTask(@RequestBody Task task) {
         return taskService.createTask(task);
     }
 
-    @GetMapping("/incomplete")
-    public List<Task> getIncompleteTasks() {
-        return taskService.getIncompleteTasks();
-    }
-
+    // READ - all tasks (optional filter by completed=true/false)
     @GetMapping
     public List<Task> getTasks(@RequestParam(required = false) Boolean completed) {
         if (completed != null) {
@@ -35,11 +32,13 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-    @PutMapping("/{id}/complete")
-    public Task completeTask(@PathVariable Long id) {
-        return taskService.markCompleted(id);
+    // READ - incomplete tasks only
+    @GetMapping("/incomplete")
+    public List<Task> getIncompleteTasks() {
+        return taskService.getIncompleteTasks();
     }
 
+    // READ - task by ID
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         Task task = taskService.getTaskById(id);
@@ -47,5 +46,31 @@ public class TaskController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(task);
+    }
+
+    // UPDATE - mark task as completed
+    @PutMapping("/{id}/complete")
+    public Task completeTask(@PathVariable Long id) {
+        return taskService.markCompleted(id);
+    }
+
+    // UPDATE - edit task (title, dueDate, completed)
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
+        Task task = taskService.updateTask(id, updatedTask);
+        if (task == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(task);
+    }
+
+    // DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        boolean deleted = taskService.deleteTask(id);
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 }
