@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "task")  // explicitly map to the "task" table
+@Table(name = "task")
 public class Task {
 
     @Id
@@ -13,10 +13,16 @@ public class Task {
 
     private String title;
 
-    @Column(name = "due_date") // map snake_case column → camelCase field
+    @Column(name = "due_date")
     private LocalDate dueDate;
 
     private boolean completed = false;
+
+    // 👇 Custom getter for "status" (not stored in DB, just returned in JSON)
+    @Transient
+    public String getStatus() {
+        return completed ? "Completed" : "Pending";
+    }
 
     // Getters & Setters
     public Long getId() { return id; }
