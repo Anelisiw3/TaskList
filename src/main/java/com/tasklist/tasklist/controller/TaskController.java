@@ -3,7 +3,7 @@ package com.tasklist.tasklist.controller;
 import com.tasklist.tasklist.model.Task;
 import com.tasklist.tasklist.service.TaskService;
 
-import org.springframework.http.ResponseEntity; // ✅ Add this
+import org.springframework.http.ResponseEntity; //  Add this
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +20,11 @@ public class TaskController {
     @PostMapping
     public Task createTask(@RequestBody Task task) {
         return taskService.createTask(task);
+    }
+
+    @GetMapping("/incomplete")
+    public List<Task> getIncompleteTasks() {
+        return taskService.getIncompleteTasks();
     }
 
     @GetMapping
@@ -42,9 +47,5 @@ public class TaskController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(task);
-    }
-    @GetMapping("/incomplete")
-    public List<Task> getIncompleteTasks() {
-        return taskService.getIncompleteTasks();
     }
 }
