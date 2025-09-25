@@ -35,5 +35,9 @@ public class TaskService {
 
 public Task getTaskById(Long id) {
     return taskRepository.findById(id).orElse(null);
-}}
+}
+public List<Task> getIncompleteTasks() {
+        return taskRepository.findByCompletedFalse();
+    }
+}
 

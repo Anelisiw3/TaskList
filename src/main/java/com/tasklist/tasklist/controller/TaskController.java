@@ -43,4 +43,8 @@ public class TaskController {
         }
         return ResponseEntity.ok(task);
     }
+    @GetMapping("/incomplete")
+    public List<Task> getIncompleteTasks() {
+        return taskService.getIncompleteTasks();
+    }
 }
