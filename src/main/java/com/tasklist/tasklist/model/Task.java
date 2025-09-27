@@ -16,15 +16,11 @@ public class Task {
     @Column(name = "due_date")
     private LocalDate dueDate;
 
-    private boolean completed = false;
+    //  Replace boolean with status column
+    @Column(nullable = false)
+    private String status = "Pending"; // default
 
-    // 👇 Custom getter for "status" (not stored in DB, just returned in JSON)
-    @Transient
-    public String getStatus() {
-        return completed ? "Completed" : "Pending";
-    }
-
-    // Getters & Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -34,6 +30,6 @@ public class Task {
     public LocalDate getDueDate() { return dueDate; }
     public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
 
-    public boolean isCompleted() { return completed; }
-    public void setCompleted(boolean completed) { this.completed = completed; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }
