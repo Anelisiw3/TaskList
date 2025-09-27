@@ -54,7 +54,6 @@ public class TaskController {
         return taskService.markCompleted(id);
     }
 
-    // UPDATE - edit task (title, dueDate, status)
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
         Task task = taskService.updateTask(id, updatedTask);

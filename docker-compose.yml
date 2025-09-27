@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: tasklist-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: taskdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - tasklist-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: tasklist-app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+
+volumes:
+  tasklist-data:
