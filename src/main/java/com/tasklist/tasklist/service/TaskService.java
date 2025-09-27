@@ -17,6 +17,10 @@ public class TaskService {
 
     // CREATE
     public Task createTask(Task task) {
+        // Default all new tasks to Pending
+        if (task.getStatus() == null || task.getStatus().isEmpty()) {
+            task.setStatus("Pending");
+        }
         return taskRepository.save(task);
     }
 
@@ -26,13 +30,13 @@ public class TaskService {
     }
 
     // READ - by status
-    public List<Task> getTasksByStatus(boolean completed) {
-        return taskRepository.findByCompleted(completed);
+    public List<Task> getTasksByStatus(String status) {
+        return taskRepository.findByStatus(status);
     }
 
-    // READ - incomplete
+    // READ - incomplete (Pending)
     public List<Task> getIncompleteTasks() {
-        return taskRepository.findByCompleted(false);
+        return taskRepository.findByStatus("Pending");
     }
 
     // READ - by id
@@ -45,26 +49,26 @@ public class TaskService {
         Optional<Task> taskOpt = taskRepository.findById(id);
         if (taskOpt.isPresent()) {
             Task task = taskOpt.get();
-            task.setCompleted(true);
+            task.setStatus("Completed");
             return taskRepository.save(task);
         }
         return null;
     }
 
-    // UPDATE edit whole task (title, dueDate, completed)
+    // UPDATE - edit whole task (title, dueDate, status)
     public Task updateTask(Long id, Task updatedTask) {
         Optional<Task> taskOpt = taskRepository.findById(id);
         if (taskOpt.isPresent()) {
             Task task = taskOpt.get();
             task.setTitle(updatedTask.getTitle());
             task.setDueDate(updatedTask.getDueDate());
-            task.setCompleted(updatedTask.isCompleted());
+            task.setStatus(updatedTask.getStatus());
             return taskRepository.save(task);
         }
         return null;
     }
 
-    
+    // DELETE
     public boolean deleteTask(Long id) {
         if (taskRepository.existsById(id)) {
             taskRepository.deleteById(id);

@@ -23,16 +23,16 @@ public class TaskController {
         return taskService.createTask(task);
     }
 
-    // READ - all tasks (optional filter by completed=true/false)
+    // READ - all tasks (optional filter by status)
     @GetMapping
-    public List<Task> getTasks(@RequestParam(required = false) Boolean completed) {
-        if (completed != null) {
-            return taskService.getTasksByStatus(completed);
+    public List<Task> getTasks(@RequestParam(required = false) String status) {
+        if (status != null) {
+            return taskService.getTasksByStatus(status);
         }
         return taskService.getAllTasks();
     }
 
-    // READ - incomplete tasks only
+    // READ - incomplete tasks only (Pending)
     @GetMapping("/incomplete")
     public List<Task> getIncompleteTasks() {
         return taskService.getIncompleteTasks();
@@ -48,13 +48,13 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
-    // UPDATE - mark task as completed
+    // UPDATE - mark task as Completed
     @PutMapping("/{id}/complete")
     public Task completeTask(@PathVariable Long id) {
         return taskService.markCompleted(id);
     }
 
-    // UPDATE - edit task (title, dueDate, completed)
+    // UPDATE - edit task (title, dueDate, status)
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
         Task task = taskService.updateTask(id, updatedTask);
