@@ -16,9 +16,8 @@ public class Task {
     @Column(name = "due_date")
     private LocalDate dueDate;
 
-    //  Replace boolean with status column
     @Column(nullable = false)
-    private String status = "Pending"; // default
+    private String status = "Pending"; 
 
     // Getters and Setters
     public Long getId() { return id; }
