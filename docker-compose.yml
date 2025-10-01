@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   postgres:
     image: postgres:15
@@ -12,17 +14,16 @@ services:
     volumes:
       - tasklist-data:/var/lib/postgresql/data
 
-  app:
+  tasklist-app:
     build: .
     container_name: tasklist-app
+    restart: always
     depends_on:
       - postgres
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskdb
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_PROFILES_ACTIVE: docker 
     ports:
       - "8081:8081"
 

@@ -2,6 +2,8 @@ package com.tasklist.tasklist.service;
 
 import com.tasklist.tasklist.model.Task;
 import com.tasklist.tasklist.repository.TaskRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +11,9 @@ import java.util.Optional;
 
 @Service
 public class TaskService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TaskService.class);
+
     private final TaskRepository taskRepository;
 
     public TaskService(TaskRepository taskRepository) {
@@ -17,30 +22,35 @@ public class TaskService {
 
     // CREATE
     public Task createTask(Task task) {
-        // Default all new tasks to Pending
         if (task.getStatus() == null || task.getStatus().isEmpty()) {
             task.setStatus("Pending");
         }
-        return taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
+        logger.info("Created new task with ID: {} and Title: {}", savedTask.getId(), savedTask.getTitle());
+        return savedTask;
     }
 
     // READ - all tasks
     public List<Task> getAllTasks() {
+        logger.debug("Fetching all tasks");
         return taskRepository.findAll();
     }
 
     // READ - by status
     public List<Task> getTasksByStatus(String status) {
+        logger.debug("Fetching tasks with status: {}", status);
         return taskRepository.findByStatus(status);
     }
 
     // READ - incomplete (Pending)
     public List<Task> getIncompleteTasks() {
+        logger.debug("Fetching all incomplete tasks (Pending)");
         return taskRepository.findByStatus("Pending");
     }
 
     // READ - by id
     public Task getTaskById(Long id) {
+        logger.debug("Fetching task with ID: {}", id);
         return taskRepository.findById(id).orElse(null);
     }
 
@@ -50,8 +60,11 @@ public class TaskService {
         if (taskOpt.isPresent()) {
             Task task = taskOpt.get();
             task.setStatus("Completed");
-            return taskRepository.save(task);
+            Task updatedTask = taskRepository.save(task);
+            logger.info("Marked task as completed with ID: {}", id);
+            return updatedTask;
         }
+        logger.warn("Attempted to mark task as completed, but task with ID: {} was not found", id);
         return null;
     }
 
@@ -63,8 +76,11 @@ public class TaskService {
             task.setTitle(updatedTask.getTitle());
             task.setDueDate(updatedTask.getDueDate());
             task.setStatus(updatedTask.getStatus());
-            return taskRepository.save(task);
+            Task savedTask = taskRepository.save(task);
+            logger.info("Updated task with ID: {}", id);
+            return savedTask;
         }
+        logger.warn("Attempted to update task, but task with ID: {} was not found", id);
         return null;
     }
 
@@ -72,8 +88,10 @@ public class TaskService {
     public boolean deleteTask(Long id) {
         if (taskRepository.existsById(id)) {
             taskRepository.deleteById(id);
+            logger.info("Deleted task with ID: {}", id);
             return true;
         }
+        logger.warn("Attempted to delete task, but task with ID: {} was not found", id);
         return false;
     }
 }
