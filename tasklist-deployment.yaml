@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasklist-app
+  namespace: tasklist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasklist-app
+  template:
+    metadata:
+      labels:
+        app: tasklist-app
+    spec:
+      containers:
+        - name: tasklist-app
+          image: tasklist-tasklist-app:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/taskdb
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tasklist-app
+  namespace: tasklist
+spec:
+  type: NodePort
+  selector:
+    app: tasklist-app
+  ports:
+    - port: 8081
+      targetPort: 8081
+      nodePort: 30080
